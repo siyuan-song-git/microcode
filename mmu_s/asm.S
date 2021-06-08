@@ -106,5 +106,3 @@ mmu_enable:
 	str x1,[x0]
 	
 www:	b www
-
-	
