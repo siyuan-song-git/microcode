@@ -3,7 +3,8 @@ TARGET=$(n)
 ifeq ($(n), )
 $(error make n=xxx)
 endif
-S_SRC= asm.o
+C_SRC= main.o
+S_SRC= start.o exceptions.o
 CROSS_TOOLCHAIN=../aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
 CC=$(CROSS_TOOLCHAIN)gcc
 LD=$(CROSS_TOOLCHAIN)ld
@@ -18,8 +19,10 @@ all: $(TARGET).axf
 $(TARGET).axf: $(S_SRC)
 	$(LD) --script=./link.lds $(S_SRC) -o ./$@ -Map=./$(TARGET).map
 
+$(C_SRC): %.o: %.c
+	$(CC) -c -g $< -o $@
 $(S_SRC): %.o: %.S
-	$(CC) -c $< -o $@
+	$(CC) -c -g $< -o $@
 
 .PHONY : dump
 dump: $(TARGET).dump
