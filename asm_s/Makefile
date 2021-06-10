@@ -4,7 +4,7 @@ ifeq ($(n), )
 $(error make n=xxx)
 endif
 S_SRC= asm.o
-CROSS_TOOLCHAIN=../aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+CROSS_TOOLCHAIN=aarch64-linux-gnu-
 CC=$(CROSS_TOOLCHAIN)gcc
 LD=$(CROSS_TOOLCHAIN)ld
 OC=$(CROSS_TOOLCHAIN)objcopy

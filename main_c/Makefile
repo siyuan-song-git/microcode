@@ -5,7 +5,8 @@ $(error make n=xxx)
 endif
 C_SRC= main.o
 S_SRC= start.o exceptions.o
-CROSS_TOOLCHAIN=../aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+#CROSS_TOOLCHAIN=../aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+CROSS_TOOLCHAIN=aarch64-linux-gnu-
 CC=$(CROSS_TOOLCHAIN)gcc
 LD=$(CROSS_TOOLCHAIN)ld
 OC=$(CROSS_TOOLCHAIN)objcopy
