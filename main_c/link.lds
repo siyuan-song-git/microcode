@@ -3,7 +3,7 @@ OUTPUT_ARCH(aarch64)
 ENTRY(_start)
 SECTIONS
 {
-	. = 0x140004000;
+	. = 0x000000;
 	__TEXT_START = .;
 	. = ALIGN(8);
 	.text :

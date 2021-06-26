@@ -1,4 +1,3 @@
-ARCH:=arm64
 
 ifeq ($(ARCH), )
 $(error make ARCH=arm/arm64)

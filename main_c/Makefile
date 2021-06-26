@@ -17,8 +17,8 @@ all: $(TARGET).axf
 	$(OC) -O binary -S ./$(TARGET).axf ./$(TARGET).bin
 	#$(BH) ./$(TARGET).bin 64 0 ./$(TARGET).hex
 	$(OD) -DS ./$(TARGET).axf > ./$(TARGET).dump
-$(TARGET).axf: $(S_SRC)
-	$(LD) --script=./link.lds $(S_SRC) -o ./$@ -Map=./$(TARGET).map
+$(TARGET).axf: $(S_SRC) $(C_SRC)
+	$(LD) --script=./link.lds $(S_SRC) $(C_SRC) -o ./$@ -Map=./$(TARGET).map
 
 $(C_SRC): %.o: %.c
 	$(CC) -c -g $< -o $@
