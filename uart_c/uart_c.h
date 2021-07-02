@@ -63,11 +63,14 @@
 
 
 
-#define TEST_PORT		1
-#define TEST_TYPE		ECHO_TEST
+#define TEST_PORT		0
+#define TEST_TYPE		INTR_TEST
 #define CLK_HZ			24000000	/* 24M */
 
-
+#define UART0_IRQ_NR		51
+#define UART1_IRQ_NR		52
+#define UART2_IRQ_NR		53
+#define UART3_IRQ_NR		54
 
 
 
@@ -146,6 +149,28 @@
 #define UART_LCR_WLEN7		(0x2 << 0) /* Wordlength: 7 bits */
 #define UART_LCR_WLEN8		(0x3 << 0) /* Wordlength: 8 bits */
 
+
+#define UART_MCR 		0x0010 /* Out: Modem Control Register */
+#define UART_MCR_SIRE		BIT(6) /* SIR Mode Enable */
+#define UART_MCR_AFE		BIT(5) /* Enable auto-RTS/CTS (TI16C550C/TI16C750) */
+#define UART_MCR_LOOP		BIT(4) /* Enable loopback test mode */
+#define UART_MCR_OUT2		BIT(3) /* Out2 complement */
+#define UART_MCR_OUT1		BIT(2) /* Out1 complement */
+#define UART_MCR_RTS		BIT(1) /* RTS complement */
+#define UART_MCR_DTR		BIT(0) /* DTR complement */
+
+
+#define UART_LSR		0x0014 /* In:  Line Status Register */
+#define UART_LSR_ADDR_RCVD	BIT(8) /* Indicates the character is an address or data */
+#define UART_LSR_RFIFOE		BIT(7) /* Receiver Fifo error */
+#define UART_LSR_TEMT		BIT(6) /* Transmitter empty */
+#define UART_LSR_THRE		BIT(5) /* Transmit-hold-register empty */
+#define UART_LSR_BI		BIT(4) /* Break interrupt indicator */
+#define UART_LSR_FE		BIT(3) /* Frame error indicator */
+#define UART_LSR_PE		BIT(2) /* Parity error indicator */
+#define UART_LSR_OE		BIT(1) /* Overrun error indicator */
+#define UART_LSR_DR		BIT(0) /* Receiver data ready */
+#define UART_LSR_BRK_ERROR_BITS	0x1E /* BI, FE, PE, OE bits */
 /*
  * Access to some registers depends on register access / configuration
  * mode.
@@ -165,6 +190,7 @@ struct uart_dat {
 enum TEST_ID
 {
 	ECHO_TEST = 1,
+	INTR_TEST,
 };
 enum PARITY_TYPE
 {
@@ -201,6 +227,9 @@ enum PARITY_TYPE
 #define UART_TX_PIN_MUX_VAL(X) 		UART_TX_PIN_MUX_VAL_(X)
 #define UART_CTS_PIN_MUX_VAL(X) 	UART_CTS_PIN_MUX_VAL_(X)
 #define UART_RTS_PIN_MUX_VAL(X) 	UART_RTS_PIN_MUX_VAL_(X)
+
+#define UART_IRQ_NR_(X)		(UART##X##_IRQ_NR)
+#define UART_IRQ_NR(X)		UART_IRQ_NR_(X)
 
 
 

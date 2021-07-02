@@ -36,6 +36,7 @@ clbss_l:
 
 	bl gic_init_secure
 	bl gic_init_secure_percpu
+
 	msr daifclr, #0x3
 	adr x0, _stack_top
 	ldr x0, [x0]

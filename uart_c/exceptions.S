@@ -117,6 +117,7 @@ _do_irq:
 _do_fiq:
 	exception_entry
 	mrs 	x0,s3_0_c12_c12_0
+	bl 	clr_intr
 	bl	irq_return
 	b	exception_exit
 
@@ -157,12 +158,13 @@ exception_exit:
 clr_intr:
 	msr s3_0_c12_c12_1,x0
 	msr s3_0_c12_c11_1,x0
-	and x0,x0,#0xfff
+/*	and x0,x0,#0xfff
 	add x2,x0,#0x66
 
-/*	mov x2,#0x66
-*/	mov x0,#0x18200000
+	mov x2,#0x66
+	mov x0,#0x18200000
 	str x2,[x0]
+*/
 	ret
 
 

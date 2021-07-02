@@ -2,10 +2,6 @@
 extern void request_irq(unsigned int irq);
 static struct uart_dat ud;
 
-void irq_return(unsigned int irq)
-{
-	*(volatile unsigned int *)0x19400014 = 0x0;
-}
 
 
 unsigned int readl(unsigned long addr)
@@ -148,30 +144,54 @@ void echo_test(struct uart_dat *up)
 
 	/* set line: 8bit data, 1bit stop, 0bit parity*/
 //	par = EVEN;
-	set_line_ctrl(up, 6, 1, EVEN);
-
-#if 0
-	*(volatile unsigned int *)0x1000104 = 0x1;
-	*(volatile unsigned long *)0x1006100 = 0x0ULL;
-#else
-	request_irq(32);
-#endif
-	*(volatile unsigned int *)0x19400000 = 0xffff;
-	*(volatile unsigned int *)0x19400010 = 0xffff;
-	*(volatile unsigned int *)0x19400014 = 0x1;
+	set_line_ctrl(up, 8, 1, NONE);
 
 	while(1)
 	{
-		lsr = readl(up->uart_base + 0x14);
-		if(lsr & 0x1) {
-//			if(lsr & 0xe)
-//				continue;
-			val = *(volatile unsigned int *)0x18300000;
-			*(volatile unsigned int *)0x18300000 = val;
+		lsr = readl(up->uart_base + UART_LSR);
+		if(lsr & UART_LSR_DR) {
+			if(lsr & UART_LSR_BRK_ERROR_BITS)
+				continue;
+			val = readl(ud.uart_base + UART_RX);
+			writel(ud.uart_base + UART_TX, val);
 		}
 	}
 }
 
+void irq_return(unsigned int irq)
+{
+	unsigned int iir, val;
+	iir = readl(ud.uart_base + UART_IIR);
+	iir &= UART_IIR_IID;
+	iir += 0x30;
+	val = readl(ud.uart_base + UART_RX);
+	if(iir != 0x32)
+		writel(ud.uart_base + UART_TX, iir);
+}
+
+void intr_test(struct uart_dat *up)
+{
+	/* enable clock */
+	ckg_enable(up);
+
+	/* set baudrate in uart1 */
+	set_baudrate(up, 115200);
+
+	/* set line: 8bit data, 1bit stop, None parity*/
+	set_line_ctrl(up, 8, 1, NONE);
+
+	request_irq(UART_IRQ_NR(TEST_PORT));
+
+	/* interrupt enable */
+	writel(ud.uart_base + UART_IER, 0xf);
+
+	/* FIFO enable */
+	writel(ud.uart_base + UART_FCR, 0x7);
+
+
+	/* Auto flow control enable */
+	writel(ud.uart_base + UART_MCR, 0x22);
+}
 
 int main(void)
 {
@@ -187,7 +207,12 @@ int main(void)
 			/* echo test */
 			echo_test(up);
 			break;
+		case INTR_TEST:
+			/* echo test */
+			intr_test(up);
+			break;
 	}
 
+	while(1);
 	return 0;
 }
