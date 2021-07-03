@@ -1,0 +1,60 @@
+system.reset
+system.cpu cortexa55
+system.jtagclock 7mhz
+
+system.config.coredebug.base 0x80804000
+system.config.cti.base 0x80814000
+system.config JTAGACCESSPORT 2.
+system.config debugaccessport 0;dap
+system.config memoryaccessport 1.
+system.config axiaccessport 1.;axi
+system.config swdp on
+system.config swdptargetsel 0
+
+system.Option ResBreak OFF
+system.Option EnReset OFF
+system.Option TRST OFF
+system.Option CFLUSH OFF
+
+system.mode up
+
+;ENDDO
+
+
+D.S MD:0x2C000408 %LE %Long 0x00000000
+PER.set.simple SPR:0x36110 %long 0
+
+Break.IMPLementation.Program Onchip 
+Break.IMPLementation.Read Onchip
+Break.IMPLementation.Write Onchip
+
+Break.IMPLementation.Alpha Onchip 
+Break.IMPLementation.Beta Onchip
+Break.IMPLementation.Charly Onchip
+Break.IMPLementation.Delta Onchip
+Break.IMPLementation.Echo Onchip
+
+wait 1s
+
+&need_init_ddr=0
+IF &need_init_ddr==1
+(
+;init ddr
+Data.LOAD C:\Users\siyuan.song\workspace\lpi_test\fy12_iram_1866
+go
+wait 2s
+break
+
+;clr SCR_EL3 trap all exceptions 
+PER.set.simple SPR:0x36110 %long 0
+
+;set arch timer to 640mhz
+&reg_val=data.long(C:0x2400000)
+&reg_val=&reg_val&~(0x3<<16.)
+&reg_val=&reg_val|(0x1<<16.)
+data.set C:0x2400000 %le %long &reg_val
+
+)
+
+Data.LOAD Y:\mygit\microcode\gicv3\lpi_test\lpi.axf 
+ENDDO

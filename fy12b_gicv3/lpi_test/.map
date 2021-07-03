@@ -1,0 +1,100 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000140040000                . = 0x140040000
+                0x0000000140040000                __TEXT_START = .
+                0x0000000140040000                . = ALIGN (0x8)
+
+.text           0x0000000140040000     0x312c
+ *(.text.first)
+ .text.first    0x0000000140040000     0x1540 asm.o
+                0x0000000140040000                _start
+                0x000000014004008c                armv8_switch_to_el1
+                0x0000000140040200                _b_start
+                0x0000000140040300                _b_end
+                0x0000000140040400                _stack_top
+ *(.text)
+ .text          0x0000000140041540        0x0 asm.o
+ *fill*         0x0000000140041540      0x2c0 
+ .text          0x0000000140041800      0x87c exceptions.o
+                0x0000000140041800                vectors
+ .text          0x000000014004207c     0x10b0 main.o
+                0x00000001400430b4                main
+
+.iplt           0x000000014004312c        0x0
+ .iplt          0x000000014004312c        0x0 asm.o
+
+.rela.dyn       0x0000000140043130        0x0
+ .rela.iplt     0x0000000140043130        0x0 asm.o
+                0x0000000140043130                . = ALIGN (0x8)
+
+.rodata
+ *(.rodata)
+                0x0000000140043130                . = ALIGN (0x8)
+
+.data           0x0000000140043130        0x0
+ *(.data)
+ .data          0x0000000140043130        0x0 asm.o
+ .data          0x0000000140043130        0x0 exceptions.o
+ .data          0x0000000140043130        0x0 main.o
+
+.igot.plt       0x0000000140043130        0x0
+ .igot.plt      0x0000000140043130        0x0 asm.o
+                0x0000000140043130                . = ALIGN (0x8)
+                0x0000000140043130                _bss_start = .
+
+.bss            0x0000000140043130        0x0
+ *(.bss)
+ .bss           0x0000000140043130        0x0 asm.o
+ .bss           0x0000000140043130        0x0 exceptions.o
+ .bss           0x0000000140043130        0x0 main.o
+                0x0000000140043130                . = ALIGN (0x8)
+                0x0000000140043130                _bss_end = .
+LOAD asm.o
+LOAD exceptions.o
+LOAD main.o
+OUTPUT(./.axf elf64-littleaarch64)
+
+.debug_line     0x0000000000000000      0x2e7
+ .debug_line    0x0000000000000000       0x62 asm.o
+ .debug_line    0x0000000000000062       0x96 exceptions.o
+ .debug_line    0x00000000000000f8      0x1ef main.o
+
+.debug_info     0x0000000000000000      0xdf9
+ .debug_info    0x0000000000000000       0x70 asm.o
+ .debug_info    0x0000000000000070       0x77 exceptions.o
+ .debug_info    0x00000000000000e7      0xd12 main.o
+
+.debug_abbrev   0x0000000000000000      0x289
+ .debug_abbrev  0x0000000000000000       0x14 asm.o
+ .debug_abbrev  0x0000000000000014       0x14 exceptions.o
+ .debug_abbrev  0x0000000000000028      0x261 main.o
+
+.debug_aranges  0x0000000000000000       0x90
+ .debug_aranges
+                0x0000000000000000       0x30 asm.o
+ .debug_aranges
+                0x0000000000000030       0x30 exceptions.o
+ .debug_aranges
+                0x0000000000000060       0x30 main.o
+
+.debug_str      0x0000000000000000      0x4e4
+ .debug_str     0x0000000000000000      0x4e4 main.o
+                                        0x538 (size before relaxing)
+
+.comment        0x0000000000000000       0x24
+ .comment       0x0000000000000000       0x24 main.o
+                                         0x25 (size before relaxing)
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 main.o
+
+.debug_frame    0x0000000000000000      0x498
+ .debug_frame   0x0000000000000000      0x498 main.o
