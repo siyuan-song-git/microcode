@@ -1,0 +1,112 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+                0x0000000000000000                . = 0x0
+                0x0000000000000000                __TEXT_START = .
+                0x0000000000000000                . = ALIGN (0x8)
+
+.text           0x0000000000000000     0x24c0
+ *(.text.first)
+ .text.first    0x0000000000000000     0x1400 start.o
+                0x0000000000000000                _start
+                0x0000000000000100                _b_start
+                0x0000000000000200                _b_end
+                0x0000000000000300                _stack_top
+ *(.text)
+ .text          0x0000000000001400        0x0 start.o
+ *fill*         0x0000000000001400      0x400 
+ .text          0x0000000000001800      0x87c exceptions.o
+                0x0000000000001800                vectors
+ .text          0x000000000000207c      0x140 mmus.o
+                0x000000000000207c                mmu_start
+ .text          0x00000000000021bc      0x304 main.o
+                0x00000000000021bc                dram_init
+                0x00000000000023d8                mc_memcpy
+                0x000000000000243c                main
+
+.iplt           0x00000000000024c0        0x0
+ .iplt          0x00000000000024c0        0x0 start.o
+
+.rela.dyn       0x00000000000024c0        0x0
+ .rela.iplt     0x00000000000024c0        0x0 start.o
+                0x00000000000024c0                . = ALIGN (0x8)
+
+.rodata
+ *(.rodata)
+                0x00000000000024c0                . = ALIGN (0x8)
+
+.data           0x00000000000024c0     0x1ac8
+ *(.data)
+ .data          0x00000000000024c0        0x0 start.o
+ .data          0x00000000000024c0        0x0 exceptions.o
+ .data          0x00000000000024c0        0x0 mmus.o
+ .data          0x00000000000024c0     0x1ac8 main.o
+                0x00000000000024c0                ddr_cfg_info
+
+.igot.plt       0x0000000000003f88        0x0
+ .igot.plt      0x0000000000003f88        0x0 start.o
+                0x0000000000003f88                . = ALIGN (0x8)
+                0x0000000000003f88                _bss_start = .
+
+.bss            0x0000000000003f88        0x0
+ *(.bss)
+ .bss           0x0000000000003f88        0x0 start.o
+ .bss           0x0000000000003f88        0x0 exceptions.o
+ .bss           0x0000000000003f88        0x0 mmus.o
+ .bss           0x0000000000003f88        0x0 main.o
+                0x0000000000003f88                . = ALIGN (0x8)
+                0x0000000000003f88                _bss_end = .
+LOAD start.o
+LOAD exceptions.o
+LOAD mmus.o
+LOAD main.o
+OUTPUT(./mmu_l3_part.axf elf64-littleaarch64)
+
+.debug_line     0x0000000000000000      0x21e
+ .debug_line    0x0000000000000000       0x6e start.o
+ .debug_line    0x000000000000006e       0x96 exceptions.o
+ .debug_line    0x0000000000000104       0x87 mmus.o
+ .debug_line    0x000000000000018b       0x93 main.o
+
+.debug_info     0x0000000000000000      0x2ef
+ .debug_info    0x0000000000000000       0x69 start.o
+ .debug_info    0x0000000000000069       0x6e exceptions.o
+ .debug_info    0x00000000000000d7       0x68 mmus.o
+ .debug_info    0x000000000000013f      0x1b0 main.o
+
+.debug_abbrev   0x0000000000000000      0x129
+ .debug_abbrev  0x0000000000000000       0x14 start.o
+ .debug_abbrev  0x0000000000000014       0x14 exceptions.o
+ .debug_abbrev  0x0000000000000028       0x14 mmus.o
+ .debug_abbrev  0x000000000000003c       0xed main.o
+
+.debug_aranges  0x0000000000000000       0xc0
+ .debug_aranges
+                0x0000000000000000       0x30 start.o
+ .debug_aranges
+                0x0000000000000030       0x30 exceptions.o
+ .debug_aranges
+                0x0000000000000060       0x30 mmus.o
+ .debug_aranges
+                0x0000000000000090       0x30 main.o
+
+.debug_str      0x0000000000000000       0xe9
+ .debug_str     0x0000000000000000       0xe9 main.o
+                                         0xf6 (size before relaxing)
+
+.comment        0x0000000000000000       0x24
+ .comment       0x0000000000000000       0x24 main.o
+                                         0x25 (size before relaxing)
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 main.o
+
+.debug_frame    0x0000000000000000       0x78
+ .debug_frame   0x0000000000000000       0x78 main.o

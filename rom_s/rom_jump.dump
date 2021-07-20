@@ -1,0 +1,12 @@
+
+./rom_jump.axf:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000100000 <__TEXT_START>:
+  100000:	d280001e 	mov	x30, #0x0                   	// #0
+  100004:	d65f03c0 	ret
+
+0000000000100008 <www>:
+  100008:	14000000 	b	100008 <www>

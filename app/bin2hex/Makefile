@@ -24,7 +24,7 @@ endif
 CC=$(TOOLTAIN)gcc
 
 all:
-	$(CC) -o $(NAME) $(NAME).c
+	$(CC) -o $(NAME) -static $(NAME).c
 
 clean:
 	rm -rf $(NAME)

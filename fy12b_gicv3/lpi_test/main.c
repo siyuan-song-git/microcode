@@ -267,6 +267,14 @@ static void c_mapi(unsigned long* dword, int cmd, int dev_id, int id, int collec
 	dword[3] = 0;
 }
 
+static void c_mapti(unsigned long* dword, int cmd, int dev_id, int eve_id, int int_id, int collection)
+{
+	dword[0] = ((unsigned long)dev_id << 32) | (cmd);
+	dword[1] = ((unsigned long)int_id << 32) | eve_id;
+	dword[2] = collection;
+	dword[3] = 0;
+}
+
 static void c_inv(unsigned long* dword, int cmd, int dev_id, int id)
 {
 	dword[0] = ((unsigned long)dev_id << 32) | (cmd);
@@ -311,7 +319,10 @@ static void genLpi(redist_regs* redist, its_regs* its, core_mpidr mpidr, interru
 	c_mapc(dword, CMD_MAPC, collection, 0, 1);
 	itsCmdWrite(dword, &cwrite_ptr);
 
-	c_mapi(dword, CMD_MAPI, dev_id, intr.id, collection);
+	//c_mapi(dword, CMD_MAPI, dev_id, intr.id, collection);
+	//itsCmdWrite(dword, &cwrite_ptr);
+
+	c_mapti(dword, CMD_MAPTI, dev_id, 10, intr.id, collection);
 	itsCmdWrite(dword, &cwrite_ptr);
 
 	c_inv(dword, CMD_INV, dev_id, intr.id);
@@ -450,7 +461,7 @@ void main (void)
 		{
 			for(ret = 0; ret < 1000; ret++) {}
 			//*(volatile long long *)0x1050040 = 0x100002000ULL + (u64)i;
-			*(volatile unsigned int *)(0x3000040 + 1000000 * TEST_ITS_NUM) = 0x2000ULL + (u32)i;
+			*(volatile unsigned int *)(0x3000040 + 1000000 * TEST_ITS_NUM) = 0xaULL + (u32)i;
 		}
 	}
 	while(1);

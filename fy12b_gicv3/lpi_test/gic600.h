@@ -2,13 +2,13 @@
 
 
 
-#define PROP_TB_BASE 	0x141008000
-#define PEND_TB_BASE	0x141010000
+#define PROP_TB_BASE 		0x141008000
+#define PEND_TB_BASE		0x141010000
 #define DEV_TB_BASE		0x14101a000
 #define COL_TB_BASE		0x14101b000
 #define IT_TB_BASE		0x14101c000
 #define CMDQ_BASE		0x14101f000
-#define CMDQ_SIZE		0x0
+#define CMDQ_SIZE		0x000000000
 
 
 #define GITS_BASE_OFF	(0x00040000 + 0x20000 * TEST_ITS_NUM)
@@ -16,6 +16,7 @@
 
 #define CMD_MAPD	0x08
 #define CMD_MAPC	0x09
+#define CMD_MAPTI	0x0A
 #define CMD_MAPI	0x0B
 #define CMD_INV		0x0C
 #define CMD_INT		0x03
